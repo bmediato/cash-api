@@ -26,11 +26,15 @@ const peopleList = [
   },
 ];
 
-describe('Testando os endpoints de people', () => {
-  it('Testando o cadastro de uma pessoa ', async () => {
+
+describe('Testando os endpoints de people', function () {
+  it('Testando o cadastro de uma pessoa ', async function () {
     sinon.stub(connection, 'execute').resolves([{ insertId: 42 }]);
 
-    const response = await chai.request(app).post('/people').send(
+    const response = await chai
+      .request(app)
+      .post('/people')
+      .send(
         {
           firstName: 'Luke',
           lastName: 'Skywalker',
@@ -40,10 +44,16 @@ describe('Testando os endpoints de people', () => {
       );
 
     expect(response.status).to.equal(201);
-    expect(response.body).to
-      .deep.equal({ message: 'Pessoa cadastrada com sucesso com o id 42' });
+    expect(response.body).to.
+      deep.equal({ message: 'Pessoa cadastrada com sucesso com o id 42' });
   });
-  it();
+  if('Testando a listagem de todas as pessoas', async function() {
+    sinon.stub(connection, 'execute').resolves([peopleList]);
+    const response = await chai.request(app).get('/people');
+
+    expect(response.status).to.equal(200);
+    expect(response.body).to.deep.equal(peopleList);
+  });
 
   afterEach(sinon.restore);
 });
