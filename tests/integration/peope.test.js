@@ -1,6 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
+const { response } = require('../../src/app');
 
 const app = require('../../src/app');
 const connection = require('../../src/db/connection');
@@ -47,7 +48,7 @@ describe('Testando os endpoints de people', function () {
     expect(response.body).to.
       deep.equal({ message: 'Pessoa cadastrada com sucesso com o id 42' });
   });
-  if('Testando a listagem de todas as pessoas', async function() {
+  it('Testando a listagem de todas as pessoas', async function() {
     sinon.stub(connection, 'execute').resolves([peopleList]);
     const response = await chai.request(app).get('/people');
 
@@ -55,5 +56,12 @@ describe('Testando os endpoints de people', function () {
     expect(response.body).to.deep.equal(peopleList);
   });
 
+  it('Testando a listagem da pessoa com o id 1', async function() {
+    sinon.stub(connection, 'execute').resolves([[peopleList[0]]]);
+    const response = await chai.request(app).get('/people/1');
+
+    expect(response.status).to.equal(200);
+    expect(response.body).to.deep.equal(peopleList[0]);
+  })
   afterEach(sinon.restore);
 });

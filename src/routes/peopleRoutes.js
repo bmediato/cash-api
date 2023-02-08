@@ -1,3 +1,4 @@
+const { json } = require('express');
 const express = require('express');
 const peopleDB = require('../db/peopleDB');
 
@@ -13,5 +14,15 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Ocorreu um erro ao cadastrar uma pessoa' });
   }
 });
+
+router.get('/', async (req, res) => {
+  try{
+    const [result] = await peopleDB.findAll();
+    res.status(200).json(result);
+  } catch(error){
+    console.log(error);
+    res.status(500).json({message: error.sqlMessage});
+  }
+})
 
 module.exports = router;
